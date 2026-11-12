@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Bigger Bill, Bigger Tip?",
+    "section": "",
+    "text": "Tipping is one of the few everyday transactions where the customer decides the price, which makes it a useful window into how people handle money. This paper asks whether the total bill is correlated with the tip, and therefore whether diners scale their generosity to the size of the meal."
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "Bigger Bill, Bigger Tip?",
+    "section": "",
+    "text": "Tipping is one of the few everyday transactions where the customer decides the price, which makes it a useful window into how people handle money. This paper asks whether the total bill is correlated with the tip, and therefore whether diners scale their generosity to the size of the meal."
+  },
+  {
+    "objectID": "index.html#literature-review",
+    "href": "index.html#literature-review",
+    "title": "Bigger Bill, Bigger Tip?",
+    "section": "Literature Review",
+    "text": "Literature Review\nThe (entirely fictional) Guild of Weary Waiters has long claimed that “a big table brings a big tip,” a theory drawn mostly from stories told after closing time. The rival Society of Skeptical Diners counters that tips are driven by mood, weather, and how often the water glass was refilled, though neither group has ever opened a spreadsheet to check."
+  },
+  {
+    "objectID": "index.html#method",
+    "href": "index.html#method",
+    "title": "Bigger Bill, Bigger Tip?",
+    "section": "Method",
+    "text": "Method\n\nimport pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nfrom scipy import stats\n\ndf = sns.load_dataset(\"tips\")\n\nn = len(df)\nmean_bill = df[\"total_bill\"].mean()\nmean_tip = df[\"tip\"].mean()\nmean_tip_pct = (df[\"tip\"] / df[\"total_bill\"]).mean() * 100\n\nThe sample includes 244 restaurant bills, with an average bill of $19.79, an average tip of $3.00, and an average tip rate of 16.1%. A Pearson correlation tests the null hypothesis that total bill and tip are unrelated (ρ = 0) against the alternative that they are correlated (ρ ≠ 0)."
+  },
+  {
+    "objectID": "index.html#results",
+    "href": "index.html#results",
+    "title": "Bigger Bill, Bigger Tip?",
+    "section": "Results",
+    "text": "Results\n\ncorr_matrix = df.corr(numeric_only=True)\n\nr = corr_matrix.loc[\"total_bill\", \"tip\"]\n\nr_check, pval = stats.pearsonr(df[\"total_bill\"], df[\"tip\"])\ndegf = n - 2\nr_sq_pct = r**2 * 100\n\np_text = \"p &lt; .001\" if pval &lt; 0.001 else f\"p = {pval:.3f}\"\n\ncorr_matrix.round(2)\n\n\n\n\n\n\n\n\ntotal_bill\ntip\nsize\n\n\n\n\ntotal_bill\n1.00\n0.68\n0.60\n\n\ntip\n0.68\n1.00\n0.49\n\n\nsize\n0.60\n0.49\n1.00\n\n\n\n\n\n\n\n\nsns.regplot(data=df, x=\"total_bill\", y=\"tip\", scatter_kws={\"alpha\": 0.6})\nplt.xlabel(\"Total bill ($)\")\nplt.ylabel(\"Tip ($)\")\nplt.show()\n\n\n\n\n\n\n\nFigure 1: Total bill and tip, with a fitted regression line.\n\n\n\n\n\nTotal bill and tip were significantly and positively correlated, r(242) = 0.68, p &lt; .001. The size of the bill accounts for about 46% of the variation in tips (see Figure 1), leaving the rest to other factors."
+  },
+  {
+    "objectID": "index.html#discussion",
+    "href": "index.html#discussion",
+    "title": "Bigger Bill, Bigger Tip?",
+    "section": "Discussion",
+    "text": "Discussion\nThese results reject the null hypothesis and suggest that diners do scale their tips to the size of the bill, broadly supporting the Guild of Weary Waiters. However, the data come from a single server over a few months, so future research should test whether the pattern holds across restaurants and regions, and whether party size, time of day, or smoking section explain the remaining variation."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  }
+]

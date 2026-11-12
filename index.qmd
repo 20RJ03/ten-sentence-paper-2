@@ -1,0 +1,72 @@
+---
+title: "Bigger Bill, Bigger Tip?"
+subtitle: "A Ten-Sentence Paper"
+author: "RJ Malik"
+date: today
+abstract: "Using the seaborn tips data, this paper tests whether the size of a restaurant bill is correlated with the size of the tip left by the customer."
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+jupyter: python3
+---
+
+## Introduction
+
+Tipping is one of the few everyday transactions where the customer decides the price, which makes it a useful window into how people handle money. This paper asks whether the total bill is correlated with the tip, and therefore whether diners scale their generosity to the size of the meal.
+
+## Literature Review
+
+The (entirely fictional) Guild of Weary Waiters has long claimed that "a big table brings a big tip," a theory drawn mostly from stories told after closing time. The rival Society of Skeptical Diners counters that tips are driven by mood, weather, and how often the water glass was refilled, though neither group has ever opened a spreadsheet to check.
+
+## Method
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy import stats
+
+df = sns.load_dataset("tips")
+
+n = len(df)
+mean_bill = df["total_bill"].mean()
+mean_tip = df["tip"].mean()
+mean_tip_pct = (df["tip"] / df["total_bill"]).mean() * 100
+```
+
+The sample includes `{python} f"{n}"` restaurant bills, with an average bill of $`{python} f"{mean_bill:.2f}"`, an average tip of $`{python} f"{mean_tip:.2f}"`, and an average tip rate of `{python} f"{mean_tip_pct:.1f}"`%. A Pearson correlation tests the null hypothesis that total bill and tip are unrelated (ρ = 0) against the alternative that they are correlated (ρ ≠ 0).
+
+## Results
+
+```{python}
+corr_matrix = df.corr(numeric_only=True)
+
+r = corr_matrix.loc["total_bill", "tip"]
+
+r_check, pval = stats.pearsonr(df["total_bill"], df["tip"])
+degf = n - 2
+r_sq_pct = r**2 * 100
+
+p_text = "p < .001" if pval < 0.001 else f"p = {pval:.3f}"
+
+corr_matrix.round(2)
+```
+
+```{python}
+#| label: fig-scatter
+#| fig-cap: "Total bill and tip, with a fitted regression line."
+sns.regplot(data=df, x="total_bill", y="tip", scatter_kws={"alpha": 0.6})
+plt.xlabel("Total bill ($)")
+plt.ylabel("Tip ($)")
+plt.show()
+```
+
+Total bill and tip were significantly and positively correlated, r(`{python} f"{degf}"`) = `{python} f"{r:.2f}"`, `{python} p_text`. The size of the bill accounts for about `{python} f"{r_sq_pct:.0f}"`% of the variation in tips (see @fig-scatter), leaving the rest to other factors.
+
+## Discussion
+
+These results reject the null hypothesis and suggest that diners do scale their tips to the size of the bill, broadly supporting the Guild of Weary Waiters. However, the data come from a single server over a few months, so future research should test whether the pattern holds across restaurants and regions, and whether party size, time of day, or smoking section explain the remaining variation.
+
